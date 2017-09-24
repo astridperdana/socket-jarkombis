@@ -152,6 +152,7 @@ public class GreetingServerx extends Thread {
                 } else if (a.equals("4")) {
                     out.writeUTF("Input lokasi folder yang ingin diketahui isinya. Contoh : C:/Users/5213100176");
                     dirvar = in.readUTF();
+                    System.out.println("client" + conn + "meminta tree dari direktori" + dirvar);
                     listFilesAndFilesSubDirectories(dirvar);
                     out.writeUTF(kata);
                 } else {
