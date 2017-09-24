@@ -155,6 +155,7 @@ public class GreetingServerx extends Thread {
                     System.out.println("client" + conn + "meminta tree dari direktori" + dirvar);
                     listFilesAndFilesSubDirectories(dirvar);
                     out.writeUTF(kata);
+                    kata = "";
                 } else {
                     System.out.println("Pilihan Tidak Ada.");
                 }
