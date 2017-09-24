@@ -12,7 +12,7 @@ import java.net.*;
 import java.io.*;
 
 public class GreetingClientx {
-    
+
 //    private ClientSocket clientSocket;
 //    public GreetingClientx (int port, String ip) throws IOException{
 //        Socket client = new Socket(ip, port);
@@ -33,13 +33,12 @@ public class GreetingClientx {
 //            }
 //        
 //    }
-
     public static void main(String[] args) {
 //      String serverName = args[0];
 //      int port = Integer.parseInt(args[1]);
         String serverName = "localhost";
         int port = 4321;
-        String inp1, inp2;
+        String inp1, inp2, inp3;
         try {
             System.out.println("Connecting to " + serverName + " on port " + port);
             Socket client = new Socket(serverName, port);
@@ -57,6 +56,30 @@ public class GreetingClientx {
             inp1 = bf.readLine();
             out.writeUTF(inp1);
             if (inp1.equals("1")) {
+                System.out.println(in.readUTF());
+                inp2 = bf.readLine();
+                out.writeUTF(inp2);
+                System.out.println(in.readUTF());
+                inp3 = bf.readLine();
+                out.writeUTF(inp3);
+                System.out.println(in.readUTF());
+            } else if (inp1.equals("2")) {
+                System.out.println(in.readUTF());
+                inp2 = bf.readLine();
+                out.writeUTF(inp2);
+                System.out.println(in.readUTF());
+                inp3 = bf.readLine();
+                out.writeUTF(inp3);
+                System.out.println(in.readUTF());
+            } else if (inp1.equals("3")) {
+                System.out.println(in.readUTF());
+                inp2 = bf.readLine();
+                out.writeUTF(inp2);
+                System.out.println(in.readUTF());
+                inp3 = bf.readLine();
+                out.writeUTF(inp3);
+                System.out.println(in.readUTF());
+            } else if (inp1.equals("4")){
                 System.out.println(in.readUTF());
                 inp2 = bf.readLine();
                 out.writeUTF(inp2);

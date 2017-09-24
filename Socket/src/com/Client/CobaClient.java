@@ -11,7 +11,7 @@ package com.Client;
 import java.net.*;
 import java.io.*;
 
-public class CobaServer {
+public class CobaClient {
     
 //    private Socket clientSocket;
 //    public CobaServer (int port, String ip) throws IOException{
@@ -61,6 +61,8 @@ public class CobaServer {
                 inp2 = bf.readLine();
                 out.writeUTF(inp2);
                 System.out.println(in.readUTF());
+            } else if (inp1.equals(("2"))) {
+                
             }
             client.close();
         } catch (IOException e) {
