@@ -29,6 +29,7 @@ public class GreetingServerx extends Thread {
     }
 
     String kata = "";
+    String FILE_TO_SEND = "";
 
     public void listFilesAndFilesSubDirectories(String directoryName) {
         File directory = new File(directoryName);
@@ -46,6 +47,9 @@ public class GreetingServerx extends Thread {
     public void run() {
         String conn, mkdirvar, fname, gabung, dirvar;
         String a = "", b = "";
+        FileInputStream fis = null;
+        BufferedInputStream bis = null;
+        OutputStream os = null;
 
         System.out.println("Waiting for client on port "
                 + serverSocket.getLocalPort() + "...");
@@ -67,6 +71,7 @@ public class GreetingServerx extends Thread {
                         + "\n2. Melihat Isi Direktori"
                         + "\n3. Membuat File"
                         + "\n4. Melihat Tree Dalam Direktori"
+                        + "\n5. Download File Pada Server"
                         + "\nSilahkan Pilih Menu :");
                 a = in.readUTF().toString();
                 System.out.println(a);
@@ -156,17 +161,39 @@ public class GreetingServerx extends Thread {
                     listFilesAndFilesSubDirectories(dirvar);
                     out.writeUTF(kata);
                     kata = "";
+                } else if (a.equals("5")) {
+                    out.writeUTF("Masukkan lokasi file yang ingin di download. Contoh : C:/Users/5213100176");
+                    mkdirvar = in.readUTF();
+                    out.writeUTF("Masukkan nama file dan extensinya : ");
+                    fname = in.readUTF();
+                    gabung = mkdirvar + "/" + fname;
+                    System.out.println("client " + conn + " ingin mendownload file" + gabung);
+                    FILE_TO_SEND = gabung;
+                    File myFile = new File(FILE_TO_SEND);
+                    byte[] mybytearray = new byte[(int) myFile.length()];
+                    fis = new FileInputStream(myFile);
+                    bis = new BufferedInputStream(fis);
+                    bis.read(mybytearray, 0, mybytearray.length);
+                    os = server.getOutputStream();
+                    System.out.println("Sending " + FILE_TO_SEND + "(" + mybytearray.length + " bytes)");
+                    os.write(mybytearray, 0, mybytearray.length);
+                    os.flush();
+                    System.out.println("Done.");
                 } else {
                     System.out.println("Pilihan Tidak Ada.");
                 }
 
                 out.writeUTF("Selamat Tinggal.");
+                fis.close();
+                bis.close();
                 server.close();
             } catch (SocketTimeoutException s) {
                 System.out.print(".");   // menunggu
             } catch (IOException e) {
                 e.printStackTrace();
                 break;
+            } finally {
+
             }
         }
     }

@@ -13,32 +13,22 @@ import java.io.*;
 
 public class GreetingClientx {
 
-//    private ClientSocket clientSocket;
-//    public GreetingClientx (int port, String ip) throws IOException{
-//        Socket client = new Socket(ip, port);
-//        OutputStream outToServer = client.getOutputStream();
-//    }
-//    String serverName = "localhost";
-//    int port = 4321;
-//    
-//    OutputStream outToServer = client.getOutputStream();
-//    DataOutputStream out = new DataOutputStream(outToServer);
-//    
-//    public void choice(String inputUser) {
-//        if (inputUser.equals("1")) {
-//                System.out.println(in.readUTF());
-//                inp2 = bf.readLine();
-//                out.writeUTF(inp2);
-//                System.out.println(in.readUTF());
-//            }
-//        
-//    }
+    public static String FILE_TO_RECEIVED = "";  // you may change this, I give a
+    // different name because i don't want to
+    // overwrite the one used by server...
+
+    public final static int FILE_SIZE = 6022386;
+
     public static void main(String[] args) {
 //      String serverName = args[0];
 //      int port = Integer.parseInt(args[1]);
         String serverName = "localhost";
         int port = 4321;
-        String inp1, inp2, inp3;
+        String inp1, inp2, inp3, gabung, lokasi;
+        int bytesRead;
+        int current = 0;
+        FileOutputStream fos = null;
+        BufferedOutputStream bos = null;
         try {
             System.out.println("Connecting to " + serverName + " on port " + port);
             Socket client = new Socket(serverName, port);
@@ -79,12 +69,43 @@ public class GreetingClientx {
                 inp3 = bf.readLine();
                 out.writeUTF(inp3);
                 System.out.println(in.readUTF());
-            } else if (inp1.equals("4")){
+            } else if (inp1.equals("4")) {
                 System.out.println(in.readUTF());
                 inp2 = bf.readLine();
                 out.writeUTF(inp2);
                 System.out.println(in.readUTF());
+            } else if (inp1.equals("5")) {
+                System.out.println(in.readUTF());
+                inp2 = bf.readLine();
+                out.writeUTF(inp2);
+                System.out.println(in.readUTF());
+                inp3 = bf.readLine();
+                out.writeUTF(inp3);
+                System.out.println("Masukkan lokasi penyimpanan file :");
+                lokasi = bf.readLine();
+                gabung = lokasi + "/" + inp3;
+                FILE_TO_RECEIVED = gabung;
+                byte[] mybytearray = new byte[FILE_SIZE];
+                InputStream is = client.getInputStream();
+                fos = new FileOutputStream(FILE_TO_RECEIVED);
+                bos = new BufferedOutputStream(fos);
+                bytesRead = is.read(mybytearray, 0, mybytearray.length);
+                current = bytesRead;
+
+                do {
+                    bytesRead
+                            = is.read(mybytearray, current, (mybytearray.length - current));
+                    if (bytesRead >= 0) {
+                        current += bytesRead;
+                    }
+                } while (bytesRead > -1);
+
+                bos.write(mybytearray, 0, current);
+                bos.flush();
+                System.out.println("File " + FILE_TO_RECEIVED + " telah di download (" + current + " bytes read)");
             }
+            fos.close();
+            bos.close();
             client.close();
         } catch (IOException e) {
             e.printStackTrace();
