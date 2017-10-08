@@ -36,7 +36,6 @@ public class GreetingServerx extends Thread {
 
     public void listFilesAndFilesSubDirectories(String directoryName) {
         File directory = new File(directoryName);
-        //get all the files from a directory
         File[] fList = directory.listFiles();
         for (File file : fList) {
             if (file.isFile()) {
@@ -76,7 +75,7 @@ public class GreetingServerx extends Thread {
                         + "\nBerikut Menu yang Telah Kami Siapkan :"
                         + "\n1. Membuat Direktori"
                         + "\n2. Melihat Isi Direktori"
-                        + "\n3. Membuat File"
+                        + "\n3. Membuat File (BETA)"
                         + "\n4. Melihat Tree Dalam Direktori"
                         + "\n5. Download File Pada Server"
                         + "\n6. Upload File Pada Server"
