@@ -16,6 +16,7 @@ public class GreetingClientx {
     public static String FILE_TO_RECEIVED = "";  // you may change this, I give a
     // different name because i don't want to
     // overwrite the one used by server...
+    public static String FILE_TO_SENDS = "";
 
     public final static int FILE_SIZE = 6022386;
 
@@ -29,6 +30,9 @@ public class GreetingClientx {
         int current = 0;
         FileOutputStream fos = null;
         BufferedOutputStream bos = null;
+        FileInputStream fis = null;
+        BufferedInputStream bis = null;
+        OutputStream os = null;
         try {
             System.out.println("Connecting to " + serverName + " on port " + port);
             Socket client = new Socket(serverName, port);
@@ -103,9 +107,30 @@ public class GreetingClientx {
                 bos.write(mybytearray, 0, current);
                 bos.flush();
                 System.out.println("File " + FILE_TO_RECEIVED + " telah di download (" + current + " bytes read)");
+            } else if (inp1.equals("6")) {
+                System.out.println(in.readUTF());
+                inp2 = bf.readLine();
+                out.writeUTF(inp2);
+                System.out.println(in.readUTF());
+                inp3 = bf.readLine();
+                out.writeUTF(inp3);
+                gabung = inp2 + "/" + inp3;
+                FILE_TO_SENDS = gabung;
+                File myFile = new File(FILE_TO_SENDS);
+                byte[] mybytearray = new byte[(int) myFile.length()];
+                fis = new FileInputStream(myFile);
+                bis = new BufferedInputStream(fis);
+                bis.read(mybytearray, 0, mybytearray.length);
+                os = client.getOutputStream();
+                System.out.println("Sending " + FILE_TO_SENDS + "(" + mybytearray.length + " bytes)");
+                os.write(mybytearray, 0, mybytearray.length);
+                os.flush();
+                System.out.println("Done.");
             }
-            fos.close();
-            bos.close();
+            if(os != null){os.close();}
+            if(bis != null){bis.close();}
+            if(fos != null){fos.close();}
+            if(bos != null){bos.close();}
             client.close();
         } catch (IOException e) {
             e.printStackTrace();

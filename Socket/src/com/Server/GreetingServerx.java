@@ -30,6 +30,9 @@ public class GreetingServerx extends Thread {
 
     String kata = "";
     String FILE_TO_SEND = "";
+    public static String FILE_TO_RECEIVEDS = "";
+    public final static int FILE_SIZES = 60223860;
+    
 
     public void listFilesAndFilesSubDirectories(String directoryName) {
         File directory = new File(directoryName);
@@ -50,6 +53,10 @@ public class GreetingServerx extends Thread {
         FileInputStream fis = null;
         BufferedInputStream bis = null;
         OutputStream os = null;
+        int bytesRead;
+        int current = 0;
+        FileOutputStream fos = null;
+        BufferedOutputStream bos = null;
 
         System.out.println("Waiting for client on port "
                 + serverSocket.getLocalPort() + "...");
@@ -72,6 +79,7 @@ public class GreetingServerx extends Thread {
                         + "\n3. Membuat File"
                         + "\n4. Melihat Tree Dalam Direktori"
                         + "\n5. Download File Pada Server"
+                        + "\n6. Upload File Pada Server"
                         + "\nSilahkan Pilih Menu :");
                 a = in.readUTF().toString();
                 System.out.println(a);
@@ -179,13 +187,41 @@ public class GreetingServerx extends Thread {
                     os.write(mybytearray, 0, mybytearray.length);
                     os.flush();
                     System.out.println("Done.");
+                } else if (a.equals("6")) {
+                    out.writeUTF("Masukkan lokasi file yang ingin di upload. Contoh : C:/Users/5213100176");
+                    mkdirvar = in.readUTF();
+                    out.writeUTF("Masukkan nama file dan extensinya : ");
+                    fname = in.readUTF();
+                    String uploc = "C:/Users/5213100176/Downloads/Uploads"; // tempat upload disesuaikan
+                    gabung = uploc + "/" + fname;
+                    System.out.println("client " + conn + " ingin mengupload file ke " + gabung);
+                    FILE_TO_RECEIVEDS = gabung;
+                    byte[] mybytearray = new byte[FILE_SIZES];
+                    InputStream is = server.getInputStream();
+                    fos = new FileOutputStream(FILE_TO_RECEIVEDS);
+                    bos = new BufferedOutputStream(fos);
+                    bytesRead = is.read(mybytearray, 0, mybytearray.length);
+                    current = bytesRead;
+
+                    do {
+                        bytesRead = is.read(mybytearray, current, (mybytearray.length - current));
+                        if (bytesRead >= 0) {
+                            current += bytesRead;
+                        }
+                    } while (bytesRead > -1);
+
+                    bos.write(mybytearray, 0, current);
+                    bos.flush();
+                    System.out.println("File " + FILE_TO_RECEIVEDS + " terupload (" + current + " bytes read)");
                 } else {
                     System.out.println("Pilihan Tidak Ada.");
                 }
 
                 out.writeUTF("Selamat Tinggal.");
-                fis.close();
-                bis.close();
+                if(bos != null){bos.close();}
+                if(fos != null){fos.close();}
+                if(fis != null){fis.close();}
+                if(bis != null){bis.close();}
                 server.close();
             } catch (SocketTimeoutException s) {
                 System.out.print(".");   // menunggu
